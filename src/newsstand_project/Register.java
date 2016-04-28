@@ -83,6 +83,28 @@ public class Register
     return list.iterator();
     }
     
+    
+    /**
+     * Searches if either the title or the publisher of a literature
+     * contains the keyword used to search with. Returns the result as
+     * an iterator.
+     * @param keyWord Input searchword.
+     * @return Returns the result as an iterator.
+     */
+    public Iterator<Literature> searchContainTitleOrPublisher(String keyWord)
+    {
+        ArrayList<Literature> list = new ArrayList<>();
+        for(Literature lit: collection)
+        {
+            if(lit.getTitle().toLowerCase().contains(keyWord) || lit.getPublisher().toLowerCase().contains(keyWord))
+            {
+                list.add(lit);
+            }
+        }
+        
+    return list.iterator();
+    }
+    
 
     /**
      * Search the collection of literatures by the publisher name.

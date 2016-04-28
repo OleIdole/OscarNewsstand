@@ -45,3 +45,15 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.html
+dist/run1308850123/OscarNewsstand.jnlp
+*.png
+dist/run1308850123/web-files/javafx-loading-25x25.gif
+*.gif
+*.js
+dist/OscarNewsstand.jnlp
+*.jnlp
+dist/OscarNewsstand.jnlp
+*.properties
+build/classes/newsstand_project/Newsstand_Project$1.class
+*.class

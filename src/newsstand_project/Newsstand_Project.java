@@ -7,10 +7,13 @@ package newsstand_project;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,6 +29,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -125,6 +129,7 @@ public class Newsstand_Project extends Application
         return menuBar;
     }
     
+    
     private void showAbout()
     {
         Alert alert = new Alert(AlertType.INFORMATION);
@@ -173,7 +178,9 @@ public class Newsstand_Project extends Application
     private void updateObservableList()
     {
         this.litList.setAll(this.literatureReg.getCollection()); 
+        
     }
+    
     /**
      * 
      * Creates the search field and the add and remove button.
@@ -198,6 +205,14 @@ public class Newsstand_Project extends Application
         TextField searchField = new TextField();
         searchField.setPromptText("Search");
         grid.add(searchField, 0, 0);
+        searchField.textProperty().addListener(
+            new ChangeListener() {
+                @Override
+                public void changed(ObservableValue observable, 
+                                    Object oldVal, Object newVal) {
+                    handleSearchByKey((String)oldVal, (String)newVal);
+                }
+            });
         
   
         Hyperlink advancedSearch = new Hyperlink("Advanced");
@@ -299,4 +314,41 @@ public class Newsstand_Project extends Application
     }
 
 
+
+    public void handleSearchByKey(String oldVal, String newVal) {
+        // Break out all of the parts of the search text 
+        // by splitting on white space
+        String[] parts = newVal.toLowerCase().split(" ");        
+
+
+        // If the number of characters in the text box is less than last time
+        // it must be because the user pressed delete
+        if ( oldVal != null && (newVal.length() < oldVal.length()) ) {
+            // Restore the lists original set of entries 
+            // and start from the beginning
+            updateObservableList();
+            
+            // Updates the result with the input in the searchbar
+            updateObservableListFromSearch(parts);
+        }
+        
+         else {  
+            /// Updates the result with the input in the searchbar
+            updateObservableListFromSearch(parts);        
+        }
+    }
+
+    
+    private void updateObservableListFromSearch(String[] parts) {
+        for ( String part : parts) {
+            Register newLiteratureReg = new Register();
+            Iterator<Literature> lit = literatureReg.searchContainTitleOrPublisher(part);
+            while (lit.hasNext()) {
+                newLiteratureReg.addLiterature(lit.next());
+            }
+            this.litList.setAll(newLiteratureReg.getCollection());
+        }
+    }
+    
+    
 }
